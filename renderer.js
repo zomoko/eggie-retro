@@ -1,179 +1,126 @@
-// ================= STATE =================
+// ================= TIMER STATE =================
 let selectedTime = null;
 let timeLeft = 0;
 let isRunning = false;
 let timerInterval = null;
-let selectedEggType = "";
+let selectedEggType = '';
 
-// ================= DOM =================
-const timeDisplay = document.getElementById("time-display");
-const statusText = document.getElementById("status-text");
-const startBtn = document.getElementById("start-btn");
-const resetBtn = document.getElementById("reset-btn");
-const startIcon = document.getElementById("start-icon");
-const startText = document.getElementById("start-text");
-const progressCircle = document.getElementById("progress-circle");
-const eggButtons = document.querySelectorAll(".egg-btn");
-const alarmSound = document.getElementById("alarm-sound");
+// ================= DOM ELEMENTS =================
+const timeDisplay = document.getElementById('time-display');
+const statusText = document.getElementById('status-text');
+const startBtn = document.getElementById('start-btn');
+const resetBtn = document.getElementById('reset-btn');
+const startIcon = document.getElementById('start-icon');
+const startText = document.getElementById('start-text');
+const progressCircle = document.getElementById('progress-circle');
+const eggButtons = document.querySelectorAll('.egg-btn');
+const alarmSound = document.getElementById('alarm-sound');
 
-// ================= iOS AUDIO UNLOCK =================
+// ================= AUDIO UNLOCK =================
 let audioUnlocked = false;
 
 function unlockAudio() {
   if (audioUnlocked || !alarmSound) return;
 
-  // لازم يصير داخل لمسة المستخدم (touch/click)
   alarmSound.muted = true;
   alarmSound.currentTime = 0;
 
-  const p = alarmSound.play();
-  if (p && p.then) {
-    p.then(() => {
-      alarmSound.pause();
-      alarmSound.currentTime = 0;
-      alarmSound.muted = false;
-      audioUnlocked = true;
-    }).catch(() => {
-      alarmSound.muted = false;
-    });
-  } else {
+  alarmSound.play().then(() => {
     alarmSound.pause();
     alarmSound.currentTime = 0;
     alarmSound.muted = false;
     audioUnlocked = true;
-  }
+  }).catch(() => {
+    alarmSound.muted = false;
+  });
 }
 
-// ================= PROGRESS RING =================
+// ================= PROGRESS CIRCLE =================
 const radius = 110;
 const circumference = 2 * Math.PI * radius;
 progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
 progressCircle.style.strokeDashoffset = circumference;
 
-// ================= UI HELPERS =================
-function updateDisplay() {
-  const m = Math.floor(timeLeft / 60);
-  const s = timeLeft % 60;
-  timeDisplay.textContent = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-}
-
-function updateProgress() {
-  if (!selectedTime) return;
-  const progress = (selectedTime - timeLeft) / selectedTime;
-  const offset = circumference - (progress * circumference);
-  progressCircle.style.strokeDashoffset = offset;
-}
-
-function setButtonsEnabled(enabled) {
-  startBtn.disabled = !enabled;
-  resetBtn.disabled = !enabled;
-}
-
-function setStartStateRunning(running) {
-  isRunning = running;
-  startIcon.textContent = running ? "⏸️" : "▶️";
-  startText.textContent = running ? "Pause" : "Start";
-}
-
 // ================= EGG SELECTION =================
-eggButtons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    unlockAudio(); // iOS: فتح الصوت من أول تفاعل
+eggButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    unlockAudio(); // مهم لسفاري
 
-    eggButtons.forEach((b) => b.classList.remove("selected"));
-    btn.classList.add("selected");
+    eggButtons.forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
 
-    selectedTime = parseInt(btn.dataset.time, 10);
-    selectedEggType = btn.dataset.name || "";
+    selectedTime = parseInt(btn.dataset.time);
+    selectedEggType = btn.dataset.name;
     timeLeft = selectedTime;
 
-    setButtonsEnabled(true);
+    startBtn.disabled = false;
+    resetBtn.disabled = false;
+
     stopTimer();
-    statusText.textContent = "";
-    progressCircle.classList.remove("complete");
     updateDisplay();
     updateProgress();
-  }, { passive: true });
+    statusText.textContent = '';
+    progressCircle.classList.remove('complete');
+  });
 });
 
-// ================= START / PAUSE (iOS: touchstart) =================
-function handleStartPress() {
+// ================= START / PAUSE =================
+startBtn.addEventListener('click', () => {
   unlockAudio();
 
-  if (!selectedTime) return;
-
-  if (isRunning) {
-    pauseTimer();
-  } else {
-    startTimer();
-  }
-}
-
-startBtn.addEventListener("click", handleStartPress);
-startBtn.addEventListener("touchstart", (e) => {
-  e.preventDefault(); // مهم على iOS
-  handleStartPress();
-}, { passive: false });
+  if (isRunning) pauseTimer();
+  else startTimer();
+});
 
 // ================= RESET =================
-resetBtn.addEventListener("click", resetTimer);
-resetBtn.addEventListener("touchstart", (e) => {
-  e.preventDefault();
-  resetTimer();
-}, { passive: false });
+resetBtn.addEventListener('click', resetTimer);
 
-// ================= TIMER =================
+// ================= TIMER FUNCTIONS =================
 function startTimer() {
   if (timeLeft <= 0) return;
 
-  setStartStateRunning(true);
-  statusText.textContent = "";
+  isRunning = true;
+  startIcon.textContent = '⏸️';
+  startText.textContent = 'Pause';
+  statusText.textContent = '';
 
-  clearInterval(timerInterval);
   timerInterval = setInterval(() => {
     timeLeft--;
     updateDisplay();
     updateProgress();
 
-    if (timeLeft <= 0) {
-      completeTimer();
-    }
+    if (timeLeft <= 0) completeTimer();
   }, 1000);
 }
 
 function pauseTimer() {
   stopTimer();
-  startText.textContent = "Resume";
+  startIcon.textContent = '▶️';
+  startText.textContent = 'Resume';
 }
 
 function stopTimer() {
-  setStartStateRunning(false);
-  if (timerInterval) {
-    clearInterval(timerInterval);
-    timerInterval = null;
-  }
+  isRunning = false;
+  clearInterval(timerInterval);
+  timerInterval = null;
+  startIcon.textContent = '▶️';
+  startText.textContent = 'Start';
 }
 
 function resetTimer() {
-  if (!selectedTime) return;
   stopTimer();
   timeLeft = selectedTime;
-  statusText.textContent = "";
-  progressCircle.classList.remove("complete");
   updateDisplay();
   updateProgress();
+  statusText.textContent = '';
+  progressCircle.classList.remove('complete');
 }
 
 // ================= COMPLETE =================
 function completeTimer() {
   stopTimer();
-  timeLeft = 0;
-  updateDisplay();
-  updateProgress();
-
-  statusText.textContent = "Done! 🎉";
-  progressCircle.classList.add("complete");
-
+  statusText.textContent = 'Done! 🎉';
+  progressCircle.classList.add('complete');
   playAlarm();
   flashTitle();
 }
@@ -186,7 +133,6 @@ function playAlarm() {
   alarmSound.currentTime = 0;
 
   alarmSound.play().catch(() => {
-    // fallback beep
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -203,13 +149,26 @@ function playAlarm() {
   });
 }
 
+// ================= UI UPDATES =================
+function updateDisplay() {
+  const m = Math.floor(timeLeft / 60);
+  const s = timeLeft % 60;
+  timeDisplay.textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+}
+
+function updateProgress() {
+  if (!selectedTime) return;
+  const progress = (selectedTime - timeLeft) / selectedTime;
+  progressCircle.style.strokeDashoffset = circumference - (progress * circumference);
+}
+
 // ================= TITLE FLASH =================
 function flashTitle() {
   let count = 0;
   const original = document.title;
 
   const interval = setInterval(() => {
-    document.title = (count % 2 === 0) ? "🥚 Eggs Ready!" : original;
+    document.title = count % 2 === 0 ? '🥚 Eggs Ready!' : original;
     count++;
     if (count > 10) {
       clearInterval(interval);
@@ -219,6 +178,4 @@ function flashTitle() {
 }
 
 // ================= INIT =================
-setButtonsEnabled(false);
 updateDisplay();
-updateProgress();
