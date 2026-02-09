@@ -30,8 +30,14 @@ function unlockAudio() {
     alarmSound.currentTime = 0;
     alarmSound.muted = false;
     audioUnlocked = true;
-  }).catch(() => {
+  }).catch(async () => {
+    // NEW: fallback unlock for Safari/iOS
     alarmSound.muted = false;
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      await ctx.resume();
+      audioUnlocked = true;
+    } catch {}
   });
 }
 
@@ -44,7 +50,8 @@ progressCircle.style.strokeDashoffset = circumference;
 // ================= EGG SELECTION =================
 eggButtons.forEach(btn => {
   btn.addEventListener('click', () => {
-    unlockAudio(); // مهم لسفاري
+
+    unlockAudio(); // NEW: unlock from first user interaction (Safari fix)
 
     eggButtons.forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
