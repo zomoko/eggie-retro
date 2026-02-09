@@ -1,54 +1,114 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Egg Timer</title>
-
+  
+  <!-- Pixel Font from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#ffffff">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <link rel="apple-touch-icon" href="assets/icon-192.png">
+<meta name="theme-color" content="#ffffff">
 
-  <link rel="stylesheet" href="styles.css" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="app">
-    <h1>🥚 Egg Timer</h1>
-
-    <div class="eggs">
-      <button class="egg-btn" data-time="180" data-name="Soft">Soft (3:00)</button>
-      <button class="egg-btn" data-time="360" data-name="Medium">Medium (6:00)</button>
-      <button class="egg-btn" data-time="600" data-name="Hard">Hard (10:00)</button>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>🥚 EGG TIMER</h1>
+      <p class="subtitle">PIXEL EDITION</p>
     </div>
 
-    <div class="timer-wrap">
-      <svg class="ring" width="260" height="260" viewBox="0 0 260 260" aria-hidden="true">
-        <circle class="ring-bg" cx="130" cy="130" r="110"></circle>
-        <circle id="progress-circle" class="ring-fg" cx="130" cy="130" r="110"></circle>
+    <!-- Timer Display -->
+    <div class="timer-container">
+      <svg class="progress-ring" width="250" height="250">
+        <circle
+          class="progress-ring-bg"
+          cx="125"
+          cy="125"
+          r="110"
+        />
+        <circle
+          class="progress-ring-circle"
+          cx="125"
+          cy="125"
+          r="110"
+          id="progress-circle"
+        />
       </svg>
-
-      <div class="timer">
-        <div id="time-display" class="time">00:00</div>
-        <div id="status-text" class="status"></div>
+      
+      <div class="timer-display">
+        <div class="time" id="time-display">00:00</div>
+        <div class="status" id="status-text"></div>
       </div>
     </div>
 
+    <!-- Control Buttons -->
     <div class="controls">
-      <button id="start-btn" class="primary" disabled>
-        <span id="start-icon">▶️</span>
-        <span id="start-text">Start</span>
+      <button class="btn btn-primary" id="start-btn" disabled>
+        <span id="start-icon">▶</span>
+        <span id="start-text">START</span>
       </button>
-      <button id="reset-btn" class="secondary" disabled>Reset</button>
+      <button class="btn btn-secondary" id="reset-btn" disabled>
+        ⟲ RESET
+      </button>
+    </div>
+
+    <!-- Egg Type Selection -->
+    <div class="egg-types">
+      <h2>SELECT EGG TYPE</h2>
+      <div class="egg-buttons">
+        <button class="egg-btn" data-time="180" data-name="Soft Boiled">
+          <span class="egg-emoji">🥚</span>
+          <div class="egg-info">
+            <div class="egg-name">SOFT BOILED</div>
+            <div class="egg-time">3 MINUTES</div>
+          </div>
+        </button>
+        
+        <button class="egg-btn" data-time="420" data-name="Medium Boiled">
+          <span class="egg-emoji">🍳</span>
+          <div class="egg-info">
+            <div class="egg-name">MEDIUM BOILED</div>
+            <div class="egg-time">7 MINUTES</div>
+          </div>
+        </button>
+        
+        <button class="egg-btn" data-time="600" data-name="Hard Boiled">
+          <span class="egg-emoji">🥚</span>
+          <div class="egg-info">
+            <div class="egg-name">HARD BOILED</div>
+            <div class="egg-time">10 MINUTES</div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Tips Section -->
+    <div class="tips">
+      <h3>TIPS FOR EGGS</h3>
+      <ul>
+        <li>ROOM TEMP EGGS</li>
+        <li>BOILING WATER</li>
+        <li>ICE BATH AFTER</li>
+      </ul>
     </div>
   </div>
 
-  <!-- Audio (واحد فقط) -->
-  <audio id="alarm-sound" preload="auto" playsinline>
-    <source src="assets/alarm.mp3" type="audio/mpeg">
-  </audio>
+<!-- Audio element for alarm sound -->
+<audio id="alarm-sound" preload="auto" playsinline>
+  <source src="assets/alarm.mp3" type="audio/mpeg">
+</audio>
 
-  <script src="renderer.js"></script>
+<script src="renderer.js"></script>
+
+
 </body>
 </html>
