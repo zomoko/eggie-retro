@@ -1,348 +1,113 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
+* { box-sizing: border-box; }
 body {
-  /* Pixel font - uses a built-in monospace font as fallback */
-  font-family: 'Press Start 2P', 'Courier New', monospace;
-  background: linear-gradient(135deg, #2D1B69 0%, #1a0f3d 100%);
-  overflow: hidden;
-  -webkit-user-select: none;
-  user-select: none;
-  /* Disable font smoothing for sharper pixel look */
-  -webkit-font-smoothing: none;
-  -moz-osx-font-smoothing: grayscale;
-  image-rendering: pixelated;
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  background: #fff;
+  color: #111;
 }
 
-.container {
-  width: 400px;
-  height: 650px;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-/* Header */
-.header {
-  text-align: center;
-  margin-bottom: 20px;
-  text-shadow: 3px 3px 0px #000000;
-}
-
-.header h1 {
-  font-size: 1.5rem; /* Smaller for pixel font readability */
-  color: #FFD700;
-  margin-bottom: 10px;
-  letter-spacing: 2px;
-  /* Pixelated border effect */
-  text-shadow: 
-    2px 2px 0px #FF1493,
-    4px 4px 0px #000000;
-}
-
-.subtitle {
-  color: #00FF00;
-  font-size: 0.5rem; /* Small pixel text */
-  letter-spacing: 1px;
-  text-shadow: 1px 1px 0px #000000;
-}
-
-/* Timer Display */
-.timer-container {
-  position: relative;
-  width: 250px;
-  height: 250px;
-  margin: 0 auto 30px;
-  /* Pixelated border */
-  border: 4px solid #FFD700;
-  box-shadow: 
-    0 0 0 2px #000000,
-    0 0 0 6px #FFD700,
-    8px 8px 0px #000000;
-}
-
-.progress-ring {
-  transform: rotate(-90deg);
-}
-
-.progress-ring-bg {
-  fill: none;
-  stroke: #1a0f3d;
-  stroke-width: 16;
-}
-
-.progress-ring-circle {
-  fill: none;
-  stroke: #00FF00;
-  stroke-width: 16;
-  stroke-linecap: square; /* Square edges for pixel look */
-  stroke-dasharray: 691;
-  stroke-dashoffset: 691;
-  transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
-  /* Add glow effect */
-  filter: drop-shadow(0 0 8px #00FF00);
-}
-
-.progress-ring-circle.complete {
-  stroke: #FF1493;
-  filter: drop-shadow(0 0 8px #FF1493);
-}
-
-.timer-display {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.app {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 20px 16px 28px;
   text-align: center;
 }
 
-.time {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #00FF00;
-  margin-bottom: 5px;
-  letter-spacing: 3px;
-  text-shadow: 
-    2px 2px 0px #000000,
-    0 0 10px #00FF00;
-}
+h1 { margin: 8px 0 18px; }
 
-.status {
-  font-size: 0.6rem;
-  font-weight: 600;
-  color: #FF1493;
-  animation: pixelBounce 1s infinite;
-  letter-spacing: 1px;
-  text-shadow: 1px 1px 0px #000000;
-}
-
-@keyframes pixelBounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); } /* Move in 8px increments for pixel feel */
-}
-
-/* Controls */
-.controls {
+.eggs {
   display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 25px;
-}
-
-.btn {
-  padding: 12px 24px;
-  border: 4px solid #000000;
-  border-radius: 0; /* No rounded corners - pure pixel style */
-  font-size: 0.6rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.1s ease; /* Fast transition for snappy feel */
-  box-shadow: 
-    4px 4px 0px #000000;
-  font-family: 'Press Start 2P', 'Courier New', monospace;
-  letter-spacing: 1px;
-  position: relative;
-}
-
-.btn:hover:not(:disabled) {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px #000000;
-}
-
-.btn:active:not(:disabled) {
-  transform: translate(4px, 4px);
-  box-shadow: 0px 0px 0px #000000;
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  filter: grayscale(100%);
-}
-
-.btn-primary {
-  background: #00FF00;
-  color: #000000;
-  border-color: #000000;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background: #edf3ed;
-  /* Pixelated glow effect */
-  box-shadow: 
-    0 0 8px #ebeceb,
-    2px 2px 0px #000000;
-}
-
-.btn-secondary {
-  background: #FF1493;
-  color: #FFFFFF;
-  border-color: #000000;
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background: #CC1077;
-  box-shadow: 
-    0 0 8px #FF1493,
-    2px 2px 0px #000000;
-}
-
-/* Egg Type Selection */
-.egg-types {
-  margin-bottom: 20px;
-}
-
-.egg-types h2 {
-  font-size: 0.6rem;
-  color: #FFD700;
-  text-align: center;
-  margin-bottom: 15px;
-  letter-spacing: 1px;
-  text-shadow: 2px 2px 0px #000000;
-}
-
-.egg-buttons {
-  display: flex;
-  flex-direction: column;
   gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
 }
 
 .egg-btn {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 12px;
-  background: #1a0f3d;
-  border: 3px solid #FFD700;
-  border-radius: 0; /* Square corners */
-  cursor: pointer;
-  transition: all 0.1s ease;
-  box-shadow: 4px 4px 0px #000000;
-  font-family: 'Press Start 2P', 'Courier New', monospace;
-}
-
-.egg-btn:hover {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px #000000;
-  background: #8b586d;
+  border: 1px solid #ddd;
+  background: #f7f7f7;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 14px;
 }
 
 .egg-btn.selected {
-  background: #e2e4e2;
-  color: #FFFFFF;
-  border-color: #000000;
-  box-shadow: 
-    0 0 12px #FFFFFF,
-    4px 4px 0px #000000;
+  border-color: #111;
+  background: #111;
+  color: #fff;
 }
 
-.egg-emoji {
-  font-size: 2rem;
-  filter: contrast(1.2) saturate(1.5);
-}
-
-.egg-info {
-  flex: 1;
-  text-align: left;
-}
-
-.egg-name {
-  font-size: 0.6rem;
-  font-weight: 600;
-  margin-bottom: 4px;
-  letter-spacing: 1px;
-  color: #FFD700;
-}
-
-.egg-btn.selected .egg-name {
-  color: #000000;
-}
-
-.egg-time {
-  font-size: 0.45rem;
-  opacity: 0.9;
-  letter-spacing: 1px;
-  color: #ffffff;
-}
-
-.egg-btn.selected .egg-time {
-  color: #000000;
-}
-
-/* Tips Section */
-.tips {
-  background: #1a0f3d;
-  padding: 12px;
-  border: 3px solid #FFD700;
-  border-radius: 0;
-  box-shadow: 4px 4px 0px #000000;
-}
-
-.tips h3 {
-  font-size: 0.5rem;
-  color: #FFD700;
-  margin-bottom: 10px;
-  letter-spacing: 1px;
-  text-shadow: 1px 1px 0px #000000;
-}
-
-.tips ul {
-  list-style: none; /* Remove default bullets */
-  color: #00FF00;
-  font-size: 0.4rem;
-  line-height: 1.8;
-  letter-spacing: 0.5px;
-}
-
-.tips li {
-  margin-bottom: 6px;
-  padding-left: 12px;
+.timer-wrap {
   position: relative;
+  width: 260px;
+  height: 260px;
+  margin: 0 auto 18px;
 }
 
-.tips li:before {
-  content: "▸"; /* Pixel-style bullet */
+.ring {
   position: absolute;
-  left: 0;
-  color: #FF1493;
-}
-
-/* Scrollbar styling - pixel style */
-.container::-webkit-scrollbar {
-  width: 12px;
-}
-
-.container::-webkit-scrollbar-track {
-  background: #1a0f3d;
-  border: 2px solid #FFD700;
-}
-
-.container::-webkit-scrollbar-thumb {
-  background: #00FF00;
-  border: 2px solid #000000;
-}
-
-.container::-webkit-scrollbar-thumb:hover {
-  background: #FFFFFF; 
-}
-
-/* Retro CRT scanline effect (optional - remove if too much) */
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.15),
-    rgba(0, 0, 0, 0.15) 1px,
-    transparent 1px,
-    transparent 2px
-  );
+  inset: 0;
+  /* مهم: حتى لا يمنع الضغط على الأزرار بالآيفون */
   pointer-events: none;
-  z-index: 9999;
 }
+
+.ring-bg {
+  fill: none;
+  stroke: #eee;
+  stroke-width: 18;
+}
+
+.ring-fg {
+  fill: none;
+  stroke: #111;
+  stroke-width: 18;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 130px 130px;
+  stroke-dasharray: 0 9999;
+  stroke-dashoffset: 0;
+}
+
+.ring-fg.complete { stroke: #16a34a; }
+
+.timer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 8px;
+}
+
+.time {
+  font-size: 44px;
+  font-weight: 700;
+}
+
+.status {
+  font-size: 16px;
+  min-height: 20px;
+  color: #444;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+button {
+  border: none;
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.primary { background: #111; color: #fff; min-width: 160px; }
+.secondary { background: #eee; color: #111; }
